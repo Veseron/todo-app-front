@@ -1,4 +1,4 @@
-# test-project
+# Simple todo application
 
 ## Project setup
 ```
