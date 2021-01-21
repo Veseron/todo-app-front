@@ -2,7 +2,7 @@
     <li>
         <span v-bind:class="{done: todo.completed}">
             <input type="checkbox" 
-                v-on:change="todo.completed = !todo.completed"
+                v-on:change="changeStatus()"
                 :checked="todo.completed"
                 >
             <strong>{{index + 1}}</strong>    
@@ -27,6 +27,18 @@ export default {
     filters: {
         uppercase(value) {
             return value.toUpperCase()
+        }
+    },
+    methods: {
+        changeStatus() {
+            this.todo.completed = !this.todo.completed
+            
+            setTimeout(() => {
+                this.$emit('change-todo-status', {
+                    _id: this.todo._id,
+                    completed: this.todo.completed
+                }), 100
+            })
         }
     }
 }

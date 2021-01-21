@@ -1,12 +1,12 @@
 <template>
     <div>
-        <h2>Todo List on 17.01.2021</h2>
         <ul>  
             <TodoItem
                 v-for="(todo, index) of todos"
-                v-bind:todo="todo"
-                v-bind:index="index"
-                v-bind:key="index"
+                :todo="todo"
+                :index="index"
+                :key="index"
+                @change-todo-status="changeStatus"
                 @remove-todo="removeTodo"
             />
         </ul>
@@ -25,6 +25,9 @@ export default {
     methods: {
         removeTodo(id) {
             this.$emit('remove-todo', id)
+        },
+        changeStatus(todo) {
+            this.$emit('change-status', todo) 
         }
     }
 }

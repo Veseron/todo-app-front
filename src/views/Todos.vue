@@ -11,6 +11,7 @@
         <option value="not-completed">Not completed</option>
       </select>
     </div>
+    <h2>Todo List on <date :date="Date.now()"/></h2>
     <Loader
       v-if="loading"
     />
@@ -18,6 +19,7 @@
       v-else
       v-bind:todos="filteredTodos"
       @remove-todo="removeTodo"
+      @change-status="changeStatus"
     />
     <h2 v-if="filteredTodos.length == 0 && loading == false" class="text-center" style="margin-top: 20px;">
       No todos today!
@@ -29,6 +31,7 @@
 import TodoList from '@/components/TodoList'
 import AddTodo from '@/components/AddTodo'
 import Loader from '@/components/Loader'
+import Date from '@/components/simple-components/Date'
 
 const useTestData = false
 
@@ -71,7 +74,8 @@ export default {
   components: {
     TodoList,
     AddTodo,
-    Loader
+    Loader,
+    date: Date
   },
   methods: {
     removeTodo(id) {
@@ -80,7 +84,7 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          if (json) this.todos = this.todos.filter(t => t.id != id)
+          if (json) this.todos = this.todos.filter(t => t._id != id)
         })
     },
     addTodo(todo) {
@@ -93,12 +97,20 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          console.log(json)
-          if (json) {
-            this.todos.push(todo)
-          }
+          if (json) this.todos.push(json)     
         })
-      
+    },
+    changeStatus(todo) {
+      console.log(todo)
+      fetch(`http://localhost:3000/todos/${todo._id}`, {
+          method: 'PUT',
+          body: JSON.stringify(todo),
+          headers: {
+            'Content-Type': 'application/json'
+          }          
+        })
+          .then(response => response.json())
+          .then(json => console.log(json))
     }
   }
 }
